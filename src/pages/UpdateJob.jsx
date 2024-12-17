@@ -38,13 +38,13 @@ const UpdateJob = () => {
     },deadline,category,min_price,max_price,description,bid_count:job.bid_count,
   } 
   try{
-   axios.put(`${import.meta.env.VITE_API_URL}/add-update`, jobInfo)
+   axios.put(`${import.meta.env.VITE_API_URL}/add-update/${id}`, jobInfo)
    form.reset()
    toast.success('data update successfully')
    navigat('/my-posted-jobs')
 
   }
-  catch(err){
+  catch(err){ 
     console.log('error',err);
     toast.error(err.message)
 
