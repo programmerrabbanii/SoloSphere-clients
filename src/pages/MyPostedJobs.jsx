@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../providers/AuthProvider";
 import axios from "axios";
-import toast from "react-hot-toast/headless";
+import toast from "react-hot-toast";
 
 const MyPostedJobs = () => {
   const { user } = useContext(AuthContext);
@@ -14,7 +14,10 @@ const MyPostedJobs = () => {
           `${import.meta.env.VITE_API_URL}/jobs/${user.email}`
         );
         setJobs(response.data); 
-      } catch (err) {
+        myPostedData()
+
+      } 
+      catch (err) {
         console.log("error");
         toast.error("something went wrong");
       }
@@ -23,6 +26,22 @@ const MyPostedJobs = () => {
       myPostedData();
     }
   }, [user]);
+
+  const handlerDelete= async (id)=>{
+    try {
+     const {data}=await axios.delete(`${import.meta.env.VITE_API_URL}/job/${id}`)
+     console.log(data);
+     toast.success('Data deleted successfully')
+      
+    } catch (err) {
+     console.log(err,'error'); 
+     toast.error(err.message)     
+    }
+
+  }
+
+  const modernDelete = (id) => toast((t) => <div className="flex items-center gap-3 p-4 bg-white shadow-md rounded-md"><p className="text-gray-700 font-medium">Are you <b>Sure</b>?</p><div className="flex gap-2"><button onClick={() => { handlerDelete(id); toast.dismiss(t.id); }} className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">Yes</button><button onClick={() => toast.dismiss(t.id)} className="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">Cancel</button></div></div>); 
+
   return (
     <section className="container px-4 mx-auto pt-12">
       <div className="flex items-center gap-x-3">
@@ -95,7 +114,7 @@ const MyPostedJobs = () => {
                       </td>
 
                       <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
-                        {job.priceRange}
+                        {job.min_price}
                       </td>
                       <td className="px-4 py-4 text-sm whitespace-nowrap">
                         <div className="flex items-center gap-x-2">
@@ -111,7 +130,7 @@ const MyPostedJobs = () => {
                       </td>
                       <td className="px-4 py-4 text-sm whitespace-nowrap">
                         <div className="flex items-center gap-x-6">
-                          <button className="text-gray-500 transition-colors duration-200   hover:text-red-500 focus:outline-none">
+                          <button onClick={()=>modernDelete(job._id)} className="text-gray-500 transition-colors duration-200   hover:text-red-500 focus:outline-none">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
