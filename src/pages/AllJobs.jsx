@@ -4,7 +4,6 @@ import axios from 'axios'
 
 const AllJobs =() => {
   const [jobs,setJobs]=useState([])
-  console.log(jobs);
   useEffect(()=>{
     featchAllData()
   },[])
